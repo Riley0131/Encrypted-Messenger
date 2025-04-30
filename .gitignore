@@ -1,1 +1,3 @@
 *.pyc
+Client-Server/users.json
+Client-Server/stored_messages.json
