@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Inbox</title>
+</head>
+<body>
+  <h2>Inbox</h2>
+  {% if messages %}
+    <ul>
+      {% for msg in messages %}
+        <li><strong>{{ msg.from }}:</strong> {{ msg.message }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No messages.</p>
+  {% endif %}
+  <p><a href="/send">Send a Message</a> | <a href="/logout">Logout</a></p>
+</body>
+</html>

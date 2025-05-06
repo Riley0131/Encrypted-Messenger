@@ -21,7 +21,6 @@ def send_request(request):
 
 
 if __name__ == '__main__':
-    #controls for the client with different functions such as send, register, and get
     parser = argparse.ArgumentParser(description='Simple client for encrypted messaging server')
     parser.add_argument('--action', choices=['register', 'send', 'get'], required=True,
                         help='Action to perform: register a user, send a message, or get messages')
@@ -37,7 +36,6 @@ if __name__ == '__main__':
         'password': args.password
     }
 
-    #send function, will collect a message, encrypt it, and send it to the server
     if args.action == 'send':
         if not args.to or not args.message:
             print('Error: --to and --message are required for send')

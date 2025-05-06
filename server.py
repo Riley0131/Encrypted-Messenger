@@ -14,8 +14,6 @@ MSG_DB_FILE = 'stored_messages.json'
 ITERATIONS = 100_000
 
 # ---------- User management ----------
-
-#pulls all of the created users from the database encrypted json file
 def load_users():
     try:
         with open(USER_DB_FILE, 'r') as f:
@@ -23,20 +21,18 @@ def load_users():
     except (FileNotFoundError, json.JSONDecodeError):
         return {}
 
-#save a new user to the database
+
 def save_users(users):
     with open(USER_DB_FILE, 'w') as f:
         json.dump(users, f)
 
-#create a new user with a username and password password is hashed and salted 
+
 def register_user(username, password):
     users = load_users()
-    #ensure that the username is not already taken
     if username in users:
         return False, 'User already exists'
     # Generate salt and hash password
     salt = os.urandom(16)
-    # Use PBKDF2 with HMAC-SHA256 for password hashing
     kdf = PBKDF2HMAC(
         algorithm=hashes.SHA256(),
         length=32,
@@ -55,7 +51,7 @@ def register_user(username, password):
     save_users(users)
     return True, 'User registered successfully'
 
-#when a user logs in ensure that the user exists and the password is correct, entered password is hashed and salted to ensure secure transport
+
 def verify_user(username, password):
     users = load_users()
     if username not in users:
@@ -76,7 +72,7 @@ def verify_user(username, password):
     except InvalidKey:
         return False
 
-# Load the per-user Fernet object for encrypting/decrypting messages
+
 def get_user_fernet(username):
     users = load_users()
     rec = users[username]
@@ -85,9 +81,6 @@ def get_user_fernet(username):
     return Fernet(key)
 
 # ---------- Message storage ----------
-
-
-# Load and save the message database
 def load_message_db():
     try:
         with open(MSG_DB_FILE, 'r') as f:
@@ -98,13 +91,12 @@ def load_message_db():
         pass
     return {}
 
-#save the message to the encrypted database
+
 def save_message_db(db):
     with open(MSG_DB_FILE, 'w') as f:
         json.dump(db, f)
 
 
-# Store an encrypted message for a recipient
 def store_encrypted_message(sender, recipient, token):
     db = load_message_db()
     db.setdefault(recipient, []).append({
@@ -114,14 +106,11 @@ def store_encrypted_message(sender, recipient, token):
     save_message_db(db)
 
 
-#pull messages from the database for a single user (recipient)
 def retrieve_encrypted_messages(username):
     db = load_message_db()
     return db.get(username, [])
 
 # ---------- Request handling ----------
-
-# Handle incoming requests
 def handle_request(req):
     action = req.get('action')
     username = req.get('username')
